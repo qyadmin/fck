@@ -295,4 +295,9 @@ public class Static
         File.Delete(path + "//" + FamerName + name);
 
     }
+
+    public bool HasValue(string key)
+    {
+        return SaveMessage.ContainsKey(key);
+    }
 }
