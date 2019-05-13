@@ -8,103 +8,104 @@ using System.IO;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using Center.Message;
-public class HttpModel : MonoBehaviour {
+public class HttpModel : MonoBehaviour
+{
 
-	public TypeGo DataType;
-	public NewMessageInfo Data;
+    public TypeGo DataType;
+    public NewMessageInfo Data;
 
-	public UnityEvent Suc, Fal;
+    public UnityEvent Suc, Fal;
 
-	public bool IsLock=false;
-	//public InputField inputField;
-	private GameObject ShowLoad;
-	private GameObject ShowError;
+    public bool IsLock = false;
+    //public InputField inputField;
+    private GameObject ShowLoad;
+    private GameObject ShowError;
 
     public bool CleanInput = true;
 
     public UnityEvent DoAction;
-	public bool NoShow=false;
+    public bool NoShow = false;
 
-    int timeOut =50;
+    int timeOut = 50;
 
     public EventPatcher<JsonData> CallBackData = new EventPatcher<JsonData>();
     public JsonData CurrentData;
-	void Start()
+    void Start()
     {
         ShowLoad = ShowOrHit._Instance.HttpLoading.gameObject;
         ShowError = ShowOrHit._Instance.Worning.gameObject;
         IsLock = Static.Instance.Lock;
     }
 
-	public void Get()
-	{
-		Data.BackData.Clear ();
-		//加密
-		//EncryptDecipherTool.GetList(Data.SendData,Islock);
-		message=null;
-		message += "?"; 
-		if(IsLock)
-			message +=EncryptDecipherTool.UserMd5 ();
+    public void Get()
+    {
+        Data.BackData.Clear();
+        //加密
+        //EncryptDecipherTool.GetList(Data.SendData,Islock);
+        message = null;
+        message += "?";
+        if (IsLock)
+            message += EncryptDecipherTool.UserMd5();
         if (ShowLoad != null)
             ShowLoad.SetActive(true);
         //if (ShowError != null)
         //    ShowError.SetActive(false);
-		switch(DataType)
-		{
-		case TypeGo.GetTypeA:
-			StopAllCoroutines();
-			StartCoroutine ("GetMessageA");
-		break;
-		case TypeGo.GetTypeB:
-			StopAllCoroutines();
-			StartCoroutine ("GetMessageB");
-		break;
-		case TypeGo.GetTypeC:
-			StopAllCoroutines();
-			StartCoroutine ("GetMessageC");
-		break;
+        switch (DataType)
+        {
+            case TypeGo.GetTypeA:
+                StopAllCoroutines();
+                StartCoroutine("GetMessageA");
+                break;
+            case TypeGo.GetTypeB:
+                StopAllCoroutines();
+                StartCoroutine("GetMessageB");
+                break;
+            case TypeGo.GetTypeC:
+                StopAllCoroutines();
+                StartCoroutine("GetMessageC");
+                break;
             case TypeGo.GetTypeD:
                 StopAllCoroutines();
                 StartCoroutine("GetMessageD");
 
                 break;
         }
-	}
-		
-	IEnumerator GetMessageA()
-	{
-		string url=Static.Instance.URL+Data.URL;
-		if (Data.SendData.Length > 0) 
-		{
-			foreach (DataValue child in Data.SendData)
-			{
-				message += "&" + child.Name + "=" +child.GetString();		        
-			}      
-		}
-		message=EncryptDecipherTool.GetListOld(message,IsLock);	
-		url = url + message;
+    }
+
+    IEnumerator GetMessageA()
+    {
+        string url = Static.Instance.URL + Data.URL;
+        if (Data.SendData.Length > 0)
+        {
+            foreach (DataValue child in Data.SendData)
+            {
+                message += "&" + child.Name + "=" + child.GetString();
+            }
+        }
+        message = EncryptDecipherTool.GetListOld(message, IsLock);
+        url = url + message;
         url = Uri.EscapeUriString(url);
-        Debug.Log (url);
+        Debug.Log(url);
         UnityWebRequest www = UnityWebRequest.Get(url);
         www.timeout = timeOut;
-        
+
         //WWW www = new WWW(url);
         //yield return www;
         yield return www.Send();
         if (www.isError)
         //if (www.error != null)
-		{
-			Data.ShowMessage="error code = " + www.error;
+        {
+            Data.ShowMessage = "error code = " + www.error;
             if (ShowError != null && !NoShow)
             {
                 ShowError.SetActive(true);
                 ShowError.GetComponentInChildren<Text>().text = www.error;
             }
-                
-			DoAction.Invoke ();
-		}
-		else
-		{
+
+            DoAction.Invoke();
+        }
+        else
+        {
             if (www.responseCode == 200)
             {  //string jsondata = System.Text.Encoding.UTF8.GetString(www.bytes);
                 string jsondata = www.downloadHandler.text;
@@ -140,7 +141,7 @@ public class HttpModel : MonoBehaviour {
                     }
                     catch
                     {
-                        
+
                     }
                 }
 
@@ -156,7 +157,7 @@ public class HttpModel : MonoBehaviour {
                     Data.GetBase.urltext.text = Data.GetBase.url;
 
 
-                
+
 
 
                 if (Data.GetBase.code == "2")
@@ -176,7 +177,7 @@ public class HttpModel : MonoBehaviour {
                         }
                     }
                 }
-                    
+
                 else if (Data.GetBase.code == "0")
                     Fal.Invoke();
 
@@ -191,37 +192,37 @@ public class HttpModel : MonoBehaviour {
                 if (ShowError != null && !NoShow)
                 {
                     ShowError.SetActive(true);
-                    ShowError.GetComponentInChildren<Text>().text = "error code"+ www.responseCode.ToString();
+                    ShowError.GetComponentInChildren<Text>().text = "error code" + www.responseCode.ToString();
                 }
             }
-                
+
 
 
 
         }
-               
 
-        ShowLoad.SetActive(false);    
+
+        ShowLoad.SetActive(false);
         CallBackData.Send(CurrentData);
         CallBackData.ClearAllEevnt();
     }
 
 
-	IEnumerator GetMessageB()
-	{
-		string url=Static.Instance.URL+Data.URL;
+    IEnumerator GetMessageB()
+    {
+        string url = Static.Instance.URL + Data.URL;
 
-		if (Data.SendData.Length > 0)
-		{
-			foreach (DataValue child in Data.SendData)
-			{
-				message += "&" + child.Name + "=" +child.GetString();		        
-			}        
-		}
-		message=EncryptDecipherTool.GetListOld(message,IsLock);
-		url = url + message;
-		url = Uri.EscapeUriString(url);
-		Debug.Log (url);
+        if (Data.SendData.Length > 0)
+        {
+            foreach (DataValue child in Data.SendData)
+            {
+                message += "&" + child.Name + "=" + child.GetString();
+            }
+        }
+        message = EncryptDecipherTool.GetListOld(message, IsLock);
+        url = url + message;
+        url = Uri.EscapeUriString(url);
+        Debug.Log(url);
         UnityWebRequest www = UnityWebRequest.Get(url);
         www.timeout = timeOut;
         //WWW www = new WWW(url);
@@ -264,7 +265,7 @@ public class HttpModel : MonoBehaviour {
                 foreach (Value i in Data.GetBase.otherValue)
                 {
                     if (i.valueText != null)
-                        i.valueText.text = jd.Keys.Contains(i.valueName) ? jd[i.valueName].ToString() : "";
+                        i.valueText.text = jd.Keys.Contains(i.valueName) && jd[i.valueName] != null ? jd[i.valueName].ToString() : "";
                     if (i.isSave)
                         Static.Instance.AddValue(i.valueName, jd.Keys.Contains(i.valueName) ? jd[i.valueName].ToString() : "");
                 }
@@ -317,7 +318,7 @@ public class HttpModel : MonoBehaviour {
                     BusinessInfoHelper.Instance.isDone = true;
                 }
 
-            }           
+            }
             else
             {
                 Data.ShowMessage = "error code = " + www.responseCode;
@@ -331,7 +332,7 @@ public class HttpModel : MonoBehaviour {
 
         }
         ShowLoad.SetActive(false);
-	}
+    }
 
     public Transform Findfather(Transform obj)
     {
@@ -351,13 +352,13 @@ public class HttpModel : MonoBehaviour {
         {
             return null;
         }
-       
+
     }
 
     public void delate()
     {
-        if(Findfather(Data.MyListMessage.FatherObj))
-        StartCoroutine(ListCountDelate(Findfather(Data.MyListMessage.FatherObj).GetComponent<ContentSizeFitter>()));
+        if (Findfather(Data.MyListMessage.FatherObj))
+            StartCoroutine(ListCountDelate(Findfather(Data.MyListMessage.FatherObj).GetComponent<ContentSizeFitter>()));
     }
 
     IEnumerator ListCountDelate(ContentSizeFitter obj)
@@ -373,21 +374,21 @@ public class HttpModel : MonoBehaviour {
 
 
 
-	string message=null;
-	IEnumerator GetMessageC()
-	{
-		string url=Static.Instance.URL+Data.URL;
-		if (Data.SendData.Length > 0)
-		{
-			foreach (DataValue child in Data.SendData)
-			{
-				message += "&" + child.Name + "=" +child.GetString();		        
-			}        
-		}
-		message=EncryptDecipherTool.GetListOld(message,IsLock);
-		url = url + message;
-		url = Uri.EscapeUriString(url);
-		Debug.Log (url+"------"+gameObject.name);
+    string message = null;
+    IEnumerator GetMessageC()
+    {
+        string url = Static.Instance.URL + Data.URL;
+        if (Data.SendData.Length > 0)
+        {
+            foreach (DataValue child in Data.SendData)
+            {
+                message += "&" + child.Name + "=" + child.GetString();
+            }
+        }
+        message = EncryptDecipherTool.GetListOld(message, IsLock);
+        url = url + message;
+        url = Uri.EscapeUriString(url);
+        Debug.Log(url + "------" + gameObject.name);
         UnityWebRequest www = UnityWebRequest.Get(url);
         www.timeout = timeOut;
         //WWW www = new WWW(url);
@@ -501,7 +502,7 @@ public class HttpModel : MonoBehaviour {
 
         }
         ShowLoad.SetActive(false);
-	}
+    }
     IEnumerator GetMessageD()
     {
         string url = Static.Instance.URL + Data.URL;

@@ -211,12 +211,17 @@ public class buysellOrders_event : MonoBehaviour
     public Text StateText;
     public Text Type;
 
+    public bool ButtonCanClick = false;
+    public HttpModel CancleDeal;
+
     public void ChangeButtonEnable()
     {
         if (StateText == null || DetailsButton == null)
             return;
         if (StateText.text == "待匹配")
-            DetailsButton.enabled = false;
+        {
+            DetailsButton.enabled = ButtonCanClick;
+        }
         else
             DetailsButton.enabled = true;
         var type = Type.text;
@@ -224,5 +229,17 @@ public class buysellOrders_event : MonoBehaviour
             set_type("buy");
         else if (type == "卖出")
             set_type("sell");
+    }
+
+    public void OnButtonClick()
+    {
+        if (ButtonCanClick)
+        {
+            CancleDeal.Data.SendData[1].SetText.text = transform.Find("order_id").GetComponent<Text>().text;
+            CancleDeal.Get();
+
+        }
+        else
+            transform.GetComponent<HttpModel>().Get();
     }
 }
