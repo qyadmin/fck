@@ -267,7 +267,7 @@ public class HttpModel : MonoBehaviour
                     if (i.valueText != null)
                         i.valueText.text = jd.Keys.Contains(i.valueName) && jd[i.valueName] != null ? jd[i.valueName].ToString() : "";
                     if (i.isSave)
-                        Static.Instance.AddValue(i.valueName, jd.Keys.Contains(i.valueName) ? jd[i.valueName].ToString() : "");
+                        Static.Instance.AddValue(i.valueName, jd.Keys.Contains(i.valueName) && (jd[i.valueName] != null) ? jd[i.valueName].ToString() : "");
                 }
 
                 if (Data.GetBase.msgInputtext != null)

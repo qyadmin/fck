@@ -11,6 +11,8 @@ public class buysellOrders_event : MonoBehaviour
     [SerializeField]
     Text buyer_tel, saler_tel, coin_num, price, money, creat_time, sk_time, zftype, zhuangtai, order_id, img;
 
+    public Text TimeValue;
+
 
     public enum buysell
     {
@@ -70,6 +72,15 @@ public class buysellOrders_event : MonoBehaviour
         catch { order_id.text = "----"; }
         try { img.text = Regex.Unescape(JsonMapper.ToJson(data["img"]).Replace("\"", "")); }
         catch { img.text = "----"; }
+        try
+        {
+            if (TimeValue != null)
+                TimeValue.text = Regex.Unescape(JsonMapper.ToJson(data["djs_time"]).Replace("\"", ""));
+        }
+        catch
+        {
+            TimeValue.text = "-1";
+        }
         Resets();
         Resetlist(zhuangtai.text);
     }
@@ -223,7 +234,10 @@ public class buysellOrders_event : MonoBehaviour
             DetailsButton.enabled = ButtonCanClick;
         }
         else
+        {
             DetailsButton.enabled = true;
+            ButtonCanClick = false;
+        }
         var type = Type.text;
         if (type == "买入")
             set_type("buy");
@@ -233,11 +247,18 @@ public class buysellOrders_event : MonoBehaviour
 
     public void OnButtonClick()
     {
+        if (StateText != null && ButtonCanClick && StateText.text == "待匹配")
+        {
+            ButtonCanClick = true;
+        }
+        else
+        {
+            ButtonCanClick = false;
+        }
         if (ButtonCanClick)
         {
             CancleDeal.Data.SendData[1].SetText.text = transform.Find("order_id").GetComponent<Text>().text;
             CancleDeal.Get();
-
         }
         else
             transform.GetComponent<HttpModel>().Get();

@@ -8,32 +8,41 @@ using System.IO;
 public class PlayVidoeOnGui : MonoBehaviour
 {
     [HideInInspector]
-    public string UrlPath;
+    public string Url;
 
     public VideoPlayer VideoPlayer;
+
+    public Text UrlText;
 
     //public AudioSource AudioPlayer;
 
     private string _savePath;
 
-    private bool _down;
-
     private FileInfo _file;
+
+    private HttpModel _targetHttpModel;
 
     private void Update()
     {
-        if ((ulong)VideoPlayer.frame >= VideoPlayer.frameCount)
+        if (VideoPlayer.isPlaying && (ulong)VideoPlayer.frame >= VideoPlayer.frameCount)
         {
+            if (_targetHttpModel != null) _targetHttpModel.Get();
             gameObject.SetActive(false);
         }
     }
 
     public void OnPlayVideoClick()
     {
-        this.gameObject.SetActive(true);
         var path = Application.persistentDataPath;
-        //Debug.Log(path);
-        _savePath = path + "/video.mp4";
+        _savePath = path + "/end.mp4";
+        Debug.Log(_savePath);
+        if (UrlText != null && !string.IsNullOrEmpty(UrlText.text))
+        {
+            Url = UrlText.text;
+        }
+        else
+            return;
+        this.gameObject.SetActive(true);
         _file = new FileInfo(_savePath);
         DirectoryInfo mydir = new DirectoryInfo(_savePath);
         if (File.Exists(_savePath))
@@ -42,22 +51,27 @@ public class PlayVidoeOnGui : MonoBehaviour
         }
         else
         {
-            StartCoroutine(DownFile(UrlPath));
+            StartCoroutine("DownFile", Url);
         }
+
+    }
+
+
+    public void SetHttpModel(HttpModel http)
+    {
+        _targetHttpModel = http;
     }
 
     private IEnumerator DownFile(string url)
     {
         WWW www = new WWW(url);
-        _down = false;
-        yield return www;
-        _down = true;
-        if (www.isDone)
+        while (!www.isDone && www.error == null)
         {
-            byte[] bytes = www.bytes;
-            CreateFile(bytes);
-            PlayVideo();
+            yield return null;
         }
+        byte[] bytes = www.bytes;
+        CreateFile(bytes);
+        PlayVideo();
     }
 
     private void CreateFile(byte[] bytes)

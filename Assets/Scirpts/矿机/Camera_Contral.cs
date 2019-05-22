@@ -178,6 +178,11 @@ public class Camera_Contral : MonoBehaviour {
 
         //foreach (Image i in sprit)
         //    i.sprite = default_image;
+        if (string.IsNullOrEmpty(obj))
+        {
+            Debug.Log("传回来的Img的格式不是png格式!");
+            yield break;
+        }
 
         WWW www = new WWW(obj);
         yield return www;

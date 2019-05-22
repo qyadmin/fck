@@ -30,8 +30,13 @@ public class CountDown : MonoBehaviour
     public GameObject ShowDownText;
     public GameObject HideDownText;
     public Transform Parent;
-
+    /// <summary>
+    /// 签到的红色提示点
+    /// </summary>
     public GameObject RedHint;
+
+
+    public Text TimeValue;
 
     /// <summary>
     /// 通过字段获得剩余时间,并进行倒计时
@@ -77,6 +82,31 @@ public class CountDown : MonoBehaviour
                 return;
             InvokeRepeating("ChangeTimeFormat", 0, 1);
         }
+    }
+
+
+    public void SetCountDown()
+    {
+        ShowDownText.SetActive(false);
+        gameObject.SetActive(true);
+        if (TimeValue == null)
+            return;
+        int num = 0;
+        try
+        {
+            num = int.Parse(TimeValue.text);
+        }
+        catch
+        {
+            num = 0;
+        }
+        if (num <= 0) return;
+        if (ShowDownText != null)
+            ShowDownText.SetActive(true);
+        _surplusTime = num;
+        CancelInvoke("ChangeTimeFormat");
+        _tempTime = 0;
+        InvokeRepeating("ChangeTimeFormat", 0, 1);
     }
 
     /// <summary>

@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Event_hongbao : MonoBehaviour {
+public class Event_hongbao : MonoBehaviour
+{
 
     [SerializeField]
     Transform hongbao;
     public void isHongbao()
     {
+        if (string.IsNullOrEmpty(Static.Instance.GetValue("hb_state")))
+            return;
         Debug.Log(Static.Instance.GetValue("hb_state"));
         if (Static.Instance.GetValue("hb_state") != "0")
         {
