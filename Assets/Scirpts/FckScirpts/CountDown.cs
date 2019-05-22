@@ -29,6 +29,7 @@ public class CountDown : MonoBehaviour
 
     public GameObject ShowDownText;
     public GameObject HideDownText;
+    public GameObject HintText;
     public Transform Parent;
     /// <summary>
     /// 签到的红色提示点
@@ -62,6 +63,7 @@ public class CountDown : MonoBehaviour
         if (_surplusTime < 0)
         {
             ShowDownText.SetActive(false);
+            if (HintText != null) HintText.SetActive(false);
             HideDownText.SetActive(true);
             CountDownSlider.value = 1;
             return;
@@ -70,6 +72,7 @@ public class CountDown : MonoBehaviour
         {
             ShowDownText.SetActive(true);
             HideDownText.SetActive(false);
+            if (HintText != null) HintText.SetActive(false);
         }
         var hasRatio = _surplusTime / _oneDay;
         Debug.Log(_surplusTime);
@@ -79,7 +82,14 @@ public class CountDown : MonoBehaviour
             CancelInvoke("ChangeTimeFormat");
             _tempTime = 0;
             if (hasRatio == 1)
+            {
+                if (HintText != null)
+                {
+                    ShowDownText.SetActive(false);
+                    HintText.SetActive(true);
+                }
                 return;
+            }
             InvokeRepeating("ChangeTimeFormat", 0, 1);
         }
     }
@@ -117,6 +127,11 @@ public class CountDown : MonoBehaviour
         if (_surplusTime == 0)
         {
             CancelInvoke("ChangeTimeFormat");
+            if (HintText != null)
+            {
+                ShowDownText.SetActive(false);
+                HintText.SetActive(true);
+            }
             return;
         }
         CountDownText.text = CountTime(_surplusTime);
