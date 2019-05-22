@@ -25,6 +25,15 @@ public class provide_help_list : MonoBehaviour
         if (obj == "请确认")
             this.GetComponent<Text>().color = HexToColor("E99A42FF");
 
+        if (obj == "待匹配")
+        {
+            self.onClick.AddListener(
+            delegate ()
+            {
+                self.transform.GetComponent<buysellOrders_event>().OnButtonClick();
+            });
+            return;
+        }
 
         if (types == type.second)
         {
@@ -52,7 +61,7 @@ public class provide_help_list : MonoBehaviour
                 if (active != null) active.color = HexToColor("20FF34FF");
             }
         }
-        this.GetComponent<Text>().text = obj + ">";
+        this.GetComponent<Text>().text = obj;
 
 
         self.onClick.AddListener(

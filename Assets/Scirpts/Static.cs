@@ -118,8 +118,10 @@ public class Static
     public bool Lock = true;
     public bool MusicSwich = true;
     //替换芯域名
-    public string URL = "http://fck.4cv47.cn/";//"http://app.cpv999.com/";//"http://zshz.hlrb7.cn/";//"http://lpgw.hlrb7.cn/";//"http://alihz.hlrb7.cn/";//"http://www.hcfir.cn/";//http://straw.mmykw.cn//http://test.mmykw.cn/
-                                                  //public string URLold = "http://www.782pay.cn";http://www.pb6x.cn/
+    //public string URL = "http://192.168.1.2/AXL/";
+    public string URL = "http://fck.ltest.cn/";
+    //"http://app.cpv999.com/";//"http://zshz.hlrb7.cn/";//"http://lpgw.hlrb7.cn/";//"http://alihz.hlrb7.cn/";//"http://www.hcfir.cn/";//http://straw.mmykw.cn//http://test.mmykw.cn/
+    //public string URLold = "http://www.782pay.cn";http://www.pb6x.cn/
     public Logininfo LoginAccount = new Logininfo();
 
     public MessageInfo Info = new MessageInfo();
@@ -294,5 +296,10 @@ public class Static
     {
         File.Delete(path + "//" + FamerName + name);
 
+    }
+
+    public bool HasValue(string key)
+    {
+        return SaveMessage.ContainsKey(key);
     }
 }

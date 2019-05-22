@@ -53,6 +53,11 @@ public class PopupWindowEvent : MonoBehaviour
     [SerializeField]
     Transform AllWindow;
     List<Transform> allwindow = new List<Transform>();
+
+    public Color DefaultColor;
+    public Color ChooseColor;
+
+
     private void Start()
     {
         OnStart();
@@ -161,9 +166,9 @@ public class PopupWindowEvent : MonoBehaviour
         foreach (Transform i in FatherRect)
         {
             if (i.GetComponent<Button>())
-                i.GetComponentInChildren<Text>().color = HexToColor("FFFFFFFF");
+                i.GetComponentInChildren<Text>().color = DefaultColor;
         }
-        value.color = HexToColor("FF8920FF");
+        value.color = ChooseColor;
     }
 
     public Color HexToColor(string hex)

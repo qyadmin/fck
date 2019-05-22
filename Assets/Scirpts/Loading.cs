@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Loading : MonoBehaviour {
+public class Loading : MonoBehaviour
+{
     public static Loading Instance;
 
     [SerializeField]
@@ -22,8 +23,10 @@ public class Loading : MonoBehaviour {
     [SerializeField]
     Text WinningInfo;
 
-	[SerializeField]
-	private LaodTiao GetLoad;
+    [SerializeField]
+    private LaodTiao GetLoad;
+
+    public string Url;
     string PhoneID_
     {
         get
@@ -58,34 +61,39 @@ public class Loading : MonoBehaviour {
         }
     }
 
+    private void Awake()
+    {
+        Static.Instance.URL = Url;
+    }
+
     void Start()
     {
         Instance = this;
-		GetLoad.StartLaod ();
+        GetLoad.StartLaod();
     }
 
     public void Login()
     {
-		Static.Instance.ClearAll ();
+        Static.Instance.ClearAll();
         Static.Instance.CurrentAccount = LogininfoEnc();
         Logining();
     }
 
-	public GameObject pppp;
+    public GameObject pppp;
     public void LoginSuccess()
     {
-            Static.Instance.LoginAccount = Static.Instance.CurrentAccount;
-			GetLoad.IsGetIn = true;
-			pppp.SetActive (true);
- 
+        Static.Instance.LoginAccount = Static.Instance.CurrentAccount;
+        GetLoad.IsGetIn = true;
+        pppp.SetActive(true);
+
     }
 
     public void LoginFailed()
     {
-		
-//        WinningInfo.text = "帐号或密码有误";
-//        Static.Instance.LoginAccount = null;
-//        Debug.Log("登录失败");
+
+        //        WinningInfo.text = "帐号或密码有误";
+        //        Static.Instance.LoginAccount = null;
+        //        Debug.Log("登录失败");
     }
 
     Logininfo LogininfoEnc()

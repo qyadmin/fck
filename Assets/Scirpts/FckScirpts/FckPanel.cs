@@ -8,7 +8,7 @@ public class WalletInfo
 {
     public string TitleName;
     public Sprite TargetSprite;
-    public string GoldName;
+    public bool HaveOther;
 }
 
 
@@ -24,10 +24,10 @@ public class FckPanel : MonoBehaviour
     public GameObject[] TargetObjects;
     public Text TitleText;
     public Image TargetImage;
-    public Text TargetText;
     public List<WalletInfo> WalletInfos;
     public Transform Parent;
 
+    public GameObject OtherObject;
     /// <summary>
     /// 根据获得值,来变换物体的状态
     /// </summary>
@@ -52,14 +52,18 @@ public class FckPanel : MonoBehaviour
 
     public void ShowWalletInfo()
     {
-        if (TitleText == null || TargetImage == null || TargetText == null)
+        if (TitleText == null || TargetImage == null)
             return;
         foreach (var info in WalletInfos)
         {
             if (TitleText.text == info.TitleName)
             {
-                TargetText.text = info.GoldName;
                 TargetImage.sprite = info.TargetSprite;
+                if (info.HaveOther)
+                {
+                    OtherObject.transform.SetParent(transform);
+                    OtherObject.transform.localPosition = new Vector3(320, 0, 0);
+                }
             }
         }
     }
