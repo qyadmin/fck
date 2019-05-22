@@ -24,7 +24,7 @@ public class SildeShowScripts : MonoBehaviour
 
     private List<Sprite> _imageSprites;
 
-    private float _stopTime = 5f;
+    private float _stopTime = 3f;
 
     private float _stopDeltaTime = 0;
 
