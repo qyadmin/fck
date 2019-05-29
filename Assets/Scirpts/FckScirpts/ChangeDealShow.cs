@@ -11,6 +11,8 @@ public class ChangeDealShow : MonoBehaviour
     /// </summary>
     public trade_Event DealTrade;
 
+    public int AddNum = 2;
+
     /// <summary>
     /// 在Drop变换时给需要赋值的Input赋值
     /// </summary>
@@ -22,7 +24,7 @@ public class ChangeDealShow : MonoBehaviour
             Debug.Log("传入的num值使DropDown数组越界!");
             return;
         }
-        if (DealDrops[num].value == 2)
+        if (DealDrops[num].value == AddNum)
         {
             Static.Instance.AddValue("flag", "0");
         }

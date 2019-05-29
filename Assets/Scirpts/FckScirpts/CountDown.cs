@@ -54,24 +54,24 @@ public class CountDown : MonoBehaviour
         }
         _surplusTime = int.Parse(Static.Instance.GetValue("time_mining"));
 
-        var num = int.Parse(Static.Instance.GetValue("can_sign"));
+        var num = Static.Instance.HasValue("can_sign") ? int.Parse(Static.Instance.GetValue("can_sign")) : 0;
         if (num > 0)
-            RedHint.SetActive(true);
+        { if (RedHint != null) RedHint.SetActive(true); }
         else
-            RedHint.SetActive(false);
+        { if (RedHint != null) RedHint.SetActive(false); }
 
         if (_surplusTime < 0)
         {
-            ShowDownText.SetActive(false);
+            if (ShowDownText != null) ShowDownText.SetActive(false);
             if (HintText != null) HintText.SetActive(false);
-            HideDownText.SetActive(true);
-            CountDownSlider.value = 1;
+            if (HideDownText != null) HideDownText.SetActive(true);
+            if (CountDownSlider != null) CountDownSlider.value = 1;
             return;
         }
         else
         {
-            ShowDownText.SetActive(true);
-            HideDownText.SetActive(false);
+            if (ShowDownText != null) ShowDownText.SetActive(true);
+            if (HideDownText != null) HideDownText.SetActive(false);
             if (HintText != null) HintText.SetActive(false);
         }
         var hasRatio = _surplusTime / _oneDay;

@@ -23,6 +23,8 @@ public class trade_Event : MonoBehaviour
     [SerializeField]
     Button click_button, click_button2;
 
+    public bool AddIsTop = false;
+
 
 
     private void Start()
@@ -53,7 +55,10 @@ public class trade_Event : MonoBehaviour
     public void set_flag()
     {
         flag.value = 0;
-        Static.Instance.AddValue("flag", "1");
+        if (AddIsTop)
+            Static.Instance.AddValue("flag", "0");
+        else
+            Static.Instance.AddValue("flag", "1");
         Debug.Log(Static.Instance.GetValue("flag"));
     }
 
@@ -61,19 +66,28 @@ public class trade_Event : MonoBehaviour
     public void set_flag2()
     {
         flag2.value = 0;
-        Static.Instance.AddValue("flag", "1");
+        if (AddIsTop)
+            Static.Instance.AddValue("flag", "0");
+        else
+            Static.Instance.AddValue("flag", "1");
         Debug.Log(Static.Instance.GetValue("flag"));
     }
 
     public void flag_valuechange()
     {
-        Static.Instance.AddValue("flag", (flag.value + 1).ToString());
+        if (AddIsTop)
+            Static.Instance.AddValue("flag", (flag.value).ToString());
+        else
+            Static.Instance.AddValue("flag", (flag.value + 1).ToString());
         Debug.Log(Static.Instance.GetValue("flag"));
     }
 
     public void flag2_valuechange()
     {
-        Static.Instance.AddValue("flag", (flag2.value + 1).ToString());
+        if (AddIsTop)
+            Static.Instance.AddValue("flag", (flag2.value).ToString());
+        else
+            Static.Instance.AddValue("flag", (flag2.value + 1).ToString());
         Debug.Log(Static.Instance.GetValue("flag"));
     }
 
