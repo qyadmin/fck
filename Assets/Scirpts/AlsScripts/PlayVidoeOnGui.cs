@@ -14,19 +14,29 @@ public class PlayVidoeOnGui : MonoBehaviour
 
     public Text UrlText;
 
+    public GameObject Hint;
+
+    public GameObject RawTexture;
+
+    public HttpModel Refresh;
+
     //public AudioSource AudioPlayer;
 
     private string _savePath;
 
     private FileInfo _file;
 
+    private bool _startPlay = false;
+
     private HttpModel _targetHttpModel;
 
     private void Update()
     {
-        if (VideoPlayer.isPlaying && (ulong)VideoPlayer.frame >= VideoPlayer.frameCount)
+        if (_startPlay && (ulong)VideoPlayer.frame >= VideoPlayer.frameCount)
         {
+            _startPlay = false;
             if (_targetHttpModel != null) _targetHttpModel.Get();
+            if (Refresh != null) Refresh.Get();
             gameObject.SetActive(false);
         }
     }
@@ -42,18 +52,26 @@ public class PlayVidoeOnGui : MonoBehaviour
         }
         else
             return;
+
+        RawTexture.SetActive(false);
         this.gameObject.SetActive(true);
         _file = new FileInfo(_savePath);
         DirectoryInfo mydir = new DirectoryInfo(_savePath);
-        if (File.Exists(_savePath))
-        {
-            PlayVideo();
-        }
-        else
-        {
-            StartCoroutine("DownFile", Url);
-        }
+        //if (File.Exists(_savePath))
+        //{
+        //    PlayVideo();
+        //}
+        //else
+        //{
+        StartCoroutine("DownFile", Url);
+        //}
 
+    }
+
+    public void Close()
+    {
+        _startPlay = false;
+        gameObject.SetActive(false);
     }
 
 
@@ -64,6 +82,7 @@ public class PlayVidoeOnGui : MonoBehaviour
 
     private IEnumerator DownFile(string url)
     {
+        Hint.SetActive(true);
         WWW www = new WWW(url);
         while (!www.isDone && www.error == null)
         {
@@ -87,11 +106,14 @@ public class PlayVidoeOnGui : MonoBehaviour
 
     private void PlayVideo()
     {
+        Hint.SetActive(false);
         StartCoroutine(DelayPlayVide(1));
     }
 
     private IEnumerator DelayPlayVide(float time)
     {
+        _startPlay = true;
+        RawTexture.SetActive(true);
         VideoPlayer.source = VideoSource.Url;
         VideoPlayer.url = _savePath;
         VideoPlayer.Prepare();
